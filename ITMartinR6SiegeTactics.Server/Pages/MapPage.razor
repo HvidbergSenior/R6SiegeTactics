@@ -1,5 +1,6 @@
 ﻿@page "/map/{MapName}"
 @inject TacticService TacticService
+@inject NavigationManager NavManager
 
 <h2>@(currentMap?.Name ?? "Loading map...")</h2>
 
@@ -9,105 +10,177 @@
         <img src="images/maps/@currentMap.Image" alt="@currentMap.Name" style="max-width:100%; height:auto; border:1px solid #ccc;" />
     </div>
 
-    @foreach (var site in currentMap.BombSites)
+    <button class="btn btn-secondary mb-3" @onclick="GoHome">Home</button>
+
+    <h4>Choose Side</h4>
+    <div class="d-flex gap-3 mb-3">
+        <button class="btn btn-danger @(selectedSide=="Attack"?"active":"")" @onclick="AttackClicked">Attack</button>
+        <button class="btn btn-primary @(selectedSide=="Defense"?"active":"")" @onclick="DefenseClicked">Defense</button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(selectedSide))
     {
-        <div class="row mb-3">
-            <!-- Attack Card -->
-            <div class="col-md-6">
-                <div class="card bg-light p-3 mb-2">
-                    <h4>Bomb Site @site.Name - Attack</h4>
+        <h4>Bomb Sites</h4>
+        <div class="d-flex gap-3 mb-3 align-items-center">
+            @foreach (var site in currentMap.BombSites)
+            {
+                <button class="btn @(selectedSite == site ? "btn-primary" : "btn-outline-primary")" @onclick="() => SelectSite(site)">
+                    @site.Name
+                </button>
+            }
+        </div>
+    }
 
-                    <div><b>Steps:</b>
-                        <ul>
-                            @foreach (var step in site.Attack.Steps)
-                            {
-                                <li>@step</li>
-                            }
-                        </ul>
-                    </div>
+    @if (selectedSite != null)
+    {
+        <div class="card bg-light p-3 mb-3">
+            <h4>@selectedSide plan for @selectedSite.Name</h4>
 
-                    <div><b>Operators:</b>
-                        @foreach (var op in site.Attack.Operators)
-                        {
-                            <div class="d-flex align-items-center mb-2">
-                                <img src="images/operators/@op.Image" style="width:50px;height:50px;margin-right:8px;" />
-                                <span>@op.Name (@op.Role) - @op.Reason</span>
-                            </div>
-                        }
-                    </div>
-
-                    <div><b>Placements:</b>
-                        @foreach (var p in site.Attack.Placements)
-                        {
-                            <div class="mb-2">
-                                <p>@p.Description</p>
-                                <img src="images/placements/@p.Image" style="max-width:200px;" />
-                            </div>
-                        }
-                    </div>
-
-                    <button class="btn btn-success mt-2" @onclick="() => SelectAttackPlan(site)">Select Attack Plan</button>
-                </div>
+            @* Steps *@
+            <div><b>Steps:</b>
+                <ul>
+                    @foreach (var step in GetSelectedStrategy().Steps)
+                    {
+                        <li>@step</li>
+                    }
+                </ul>
             </div>
 
-            <!-- Defense Card -->
-            <div class="col-md-6">
-                <div class="card bg-light p-3 mb-2">
-                    <h4>Bomb Site @site.Name - Defense</h4>
-
-                    <div><b>Steps:</b>
-                        <ul>
-                            @foreach (var step in site.Defense.Steps)
-                            {
-                                <li>@step</li>
-                            }
-                        </ul>
-                    </div>
-
-                    <div><b>Operators:</b>
-                        @foreach (var op in site.Defense.Operators)
+            @* Operators *@
+            <div><b>Operators:</b>
+                @foreach (var op in GetSelectedStrategy().Operators)
+                {
+                    <div class="d-flex align-items-center mb-2">
+                        <img src="images/operators/@op.Image" style="width:50px;height:50px;margin-right:8px;" />
+                        <span>@op.Name (@op.Role) - @op.Reason</span>
+                        @if (!string.IsNullOrEmpty(op.Tip))
                         {
-                            <div class="d-flex align-items-center mb-2">
-                                <img src="images/operators/@op.Image" style="width:50px;height:50px;margin-right:8px;" />
-                                <span>@op.Name (@op.Role) - @op.Reason</span>
-                            </div>
+                            <img src="images/tips/@op.TipImage" style="width:50px;height:50px;margin-left:8px;" />
+                            <span>@op.Tip</span>
                         }
                     </div>
+                }
+            </div>
 
-                    <div><b>Placements:</b>
-                        @foreach (var p in site.Defense.Placements)
-                        {
-                            <div class="mb-2">
-                                <p>@p.Description</p>
-                                <img src="images/placements/@p.Image" style="max-width:200px;" />
-                            </div>
-                        }
-                    </div>
-
-                    <button class="btn btn-success mt-2" @onclick="() => SelectDefensePlan(site)">Select Defense Plan</button>
+            @if (selectedSide=="Attack")
+            {
+                <div><b>Operator Ban Order:</b>
+                    @foreach (var ban in GetSelectedStrategy().OperatorBanOrder)
+                    {
+                        <img src="images/operators/@ban.Image" style="width:50px;height:50px;margin-right:5px;" />
+                    }
                 </div>
+
+                <div><b>Default Cams:</b>
+                    @foreach (var cam in GetSelectedStrategy().DefaultCams)
+                    {
+                        <img src="images/cameras/@cam" style="width:100px;height:75px;margin-right:5px;" />
+                    }
+                </div>
+
+                <div><b>Spawn Peeks:</b>
+                    @foreach (var sp in GetSelectedStrategy().SpawnPeeks)
+                    {
+                        <img src="images/spawnpeaks/@sp" style="width:100px;height:75px;margin-right:5px;" />
+                    }
+                </div>
+
+                <div><b>Rush Outs:</b>
+                    @foreach (var ro in GetSelectedStrategy().RushOuts)
+                    {
+                        <img src="images/rushouts/@ro" style="width:100px;height:75px;margin-right:5px;" />
+                    }
+                </div>
+            }
+
+            @if (selectedSide=="Defense")
+            {
+                <div><b>Need To Have Operators:</b>
+                    @foreach (var op in GetSelectedStrategy().NeedToHaveOperators)
+                    {
+                        <img src="images/operators/@op.Image" style="width:50px;height:50px;margin-right:5px;" />
+                        <span>@op.Name</span>
+                    }
+                </div>
+
+                <div><b>Nice To Have Operators:</b>
+                    @foreach (var op in GetSelectedStrategy().NiceToHaveOperators)
+                    {
+                        <img src="images/operators/@op.Image" style="width:50px;height:50px;margin-right:5px;" />
+                        <span>@op.Name</span>
+                    }
+                </div>
+
+                <div><b>Fun To Have Operators:</b>
+                    @foreach (var op in GetSelectedStrategy().FunToHaveOperators)
+                    {
+                        <img src="images/operators/@op.Image" style="width:50px;height:50px;margin-right:5px;" />
+                        <span>@op.Name</span>
+                    }
+                </div>
+
+                <div><b>Default Cams:</b>
+                    @foreach (var cam in GetSelectedStrategy().DefaultCams)
+                    {
+                        <img src="images/cameras/@cam" style="width:100px;height:75px;margin-right:5px;" />
+                    }
+                </div>
+            }
+
+            @* Placements *@
+            <div><b>Placements:</b>
+                @foreach (var p in GetSelectedStrategy().Placements)
+                {
+                    <div class="mb-2">
+                        <p>@p.Description</p>
+                        <img src="images/placements/@p.Image" style="max-width:200px;" />
+                    </div>
+                }
             </div>
         </div>
-        <hr />
     }
 }
 
 @code {
     [Parameter] public string MapName { get; set; }
     private Map currentMap;
+    private BombSite selectedSite;
+    private string selectedSide;
 
     protected override async Task OnInitializedAsync()
     {
         currentMap = await TacticService.GetMap(MapName);
     }
 
-    void SelectAttackPlan(BombSite site)
+    void SelectSide(string side)
     {
-        Console.WriteLine($"Selected attack plan for {site.Name}");
+        selectedSide = side;
+        selectedSite = null; // reset site when switching sides
     }
 
-    void SelectDefensePlan(BombSite site)
+    void SelectSite(BombSite site)
     {
-        Console.WriteLine($"Selected defense plan for {site.Name}");
+        selectedSite = site;
+    }
+
+    Strategy GetSelectedStrategy() => selectedSide=="Attack" ? selectedSite.Attack : selectedSite.Defense;
+
+    void GoHome() => NavManager.NavigateTo("/");
+
+    // --- Attack / Defense methods ---
+    void AttackClicked()
+    {
+        selectedSide = "Attack";
+        selectedSite = null; // reset site
+        Console.WriteLine($"Attack method clicked on map {MapName}");
+        // You can add further navigation or processing here
+    }
+
+    void DefenseClicked()
+    {
+        selectedSide = "Defense";
+        selectedSite = null; // reset site
+        Console.WriteLine($"Defense method clicked on map {MapName}");
+        // You can add further navigation or processing here
     }
 }

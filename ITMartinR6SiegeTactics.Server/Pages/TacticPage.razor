@@ -1,0 +1,52 @@
+﻿@page "/tactic/{MapName}/{SiteName}/{Side}"
+@inject TacticService TacticService
+
+<h2>@MapName - @SiteName - @Side</h2>
+
+@if (currentSite != null)
+{
+    var plan = Side == "Attack" ? currentSite.Attack : currentSite.Defense;
+
+    <div><b>Steps:</b>
+        <ul>
+            @foreach (var step in plan.Steps)
+            {
+                <li>@step</li>
+            }
+        </ul>
+    </div>
+
+    <div><b>Operators:</b>
+        @foreach (var op in plan.Operators)
+        {
+            <div class="d-flex align-items-center mb-2">
+                <img src="images/operators/@op.Image" style="width:50px;height:50px;margin-right:8px;" />
+                <span>@op.Name (@op.Role) - @op.Reason</span>
+            </div>
+        }
+    </div>
+
+    <div><b>Placements:</b>
+        @foreach (var p in plan.Placements)
+        {
+            <div class="mb-2">
+                <p>@p.Description</p>
+                <img src="images/placements/@p.Image" style="max-width:200px;" />
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public string MapName { get; set; }
+    [Parameter] public string SiteName { get; set; }
+    [Parameter] public string Side { get; set; }
+
+    private BombSite currentSite;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var map = await TacticService.GetMap(MapName);
+        currentSite = map.BombSites.FirstOrDefault(s => s.Name == SiteName);
+    }
+}

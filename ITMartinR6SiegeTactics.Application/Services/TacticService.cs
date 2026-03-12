@@ -16,120 +16,64 @@ public class TacticService
     {
         return mapName switch
         {
-            "Clubhouse" => Task.FromResult(ClubhouseMap()),
-            "Fortress" => Task.FromResult(FortressMap()),
+            "Clubhouse" => Task.FromResult(GenerateMap("Clubhouse")),
+            "Coastline" => Task.FromResult(GenerateMap("Coastline")),
+            "Oregon" => Task.FromResult(GenerateMap("Oregon")),
+            "Kafe Dostoyevsky" => Task.FromResult(GenerateMap("Kafe Dostoyevsky")),
+            "Bank" => Task.FromResult(GenerateMap("Bank")),
+            "Villa" => Task.FromResult(GenerateMap("Villa")),
+            "Border" => Task.FromResult(GenerateMap("Border")),
+            "Consulate" => Task.FromResult(GenerateMap("Consulate")),
+            "Chalet" => Task.FromResult(GenerateMap("Chalet")),
+            "Nighthaven Labs" => Task.FromResult(GenerateMap("Nighthaven Labs")),
+            "Skyscraper" => Task.FromResult(GenerateMap("Skyscraper")),
+            "Theme Park" => Task.FromResult(GenerateMap("Theme Park")),
+            "Kanal" => Task.FromResult(GenerateMap("Kanal")),
+            "Lair" => Task.FromResult(GenerateMap("Lair")),
+            "Emerald Plains" => Task.FromResult(GenerateMap("Emerald Plains")),
+            "Outback" => Task.FromResult(GenerateMap("Outback")),
             _ => throw new ArgumentException($"Map '{mapName}' not found")
         };
     }
 
-    private Map ClubhouseMap()
+    private Map GenerateMap(string mapName)
     {
-        return new Map
-        {
-            Name = "Clubhouse",
-            Image = "clubhouse.jpg",
-            BombSites = new List<BombSite>
-            {
-                new BombSite
-                {
-                    Name = "A",
-                    Attack = new Strategy
-                    {
-                        Steps = new List<string> { "Step 1: Enter Garage", "Step 2: Breach wall" },
-                        Operators = new List<OperatorRecommendation>
-                        {
-                            new OperatorRecommendation { Name = "Sledge", Role = "Attacker", Reason = "Break walls quickly", Image = "sledge.jpg" },
-                            new OperatorRecommendation { Name = "Ash", Role = "Attacker", Reason = "Ranged breaching", Image = "ash.jpg" }
-                        },
-                        Placements = new List<Placement>
-                        {
-                            new Placement { Description = "Breach wall near objective", Image = "clubhouse_a_attack.jpg" }
-                        }
-                    },
-                    Defense = new Strategy
-                    {
-                        Steps = new List<string> { "Step 1: Hold site", "Step 2: Use Mira mirrors" },
-                        Operators = new List<OperatorRecommendation>
-                        {
-                            new OperatorRecommendation { Name = "Kaid", Role = "Defender", Reason = "Stop electronics", Image = "kaid.jpg" },
-                            new OperatorRecommendation { Name = "Mira", Role = "Defender", Reason = "Cover hallway", Image = "mira.jpg" }
-                        },
-                        Placements = new List<Placement>
-                        {
-                            new Placement { Description = "Place Mira mirror on wall", Image = "clubhouse_a_defense.jpg" }
-                        }
-                    }
-                }
-            }
-        };
-    }
+        var rnd = new Random();
+        var operators = new[] { "Ash", "Fuze", "Kapkan", "Mira", "Thermite" };
+        var bombsiteNames = new[] { "A", "B", "C", "D" };
 
-    private Map FortressMap()
-    {
-        return new Map
+        var sites = bombsiteNames.Select(site => new BombSite
         {
-            Name = "Fortress",
-            Image = "fortress.jpg",
-            BombSites = new List<BombSite>
+            Name = site,
+            IsTop = true,
+            Attack = new Strategy
             {
-                new BombSite
-                {
-                    Name = "A",
-                    Attack = new Strategy
-                    {
-                        Steps = new List<string> { "Step 1 Attack Fortress" },
-                        Operators = new List<OperatorRecommendation>
-                        {
-                            new OperatorRecommendation { Name = "Ash", Role = "Attacker", Reason = "Fast entry", Image = "ash.jpg" }
-                        },
-                        Placements = new List<Placement>
-                        {
-                            new Placement { Description = "Breach main wall", Image = "fortress_a_attack.jpg" }
-                        }
-                    },
-                    Defense = new Strategy
-                    {
-                        Steps = new List<string> { "Step 1 Defend Fortress" },
-                        Operators = new List<OperatorRecommendation>
-                        {
-                            new OperatorRecommendation { Name = "Smoke", Role = "Defender", Reason = "Block entry", Image = "smoke.jpg" }
-                        },
-                        Placements = new List<Placement>
-                        {
-                            new Placement { Description = "Place barbed wire", Image = "fortress_a_defense.jpg" }
-                        }
-                    }
-                },
-                
-                new BombSite
-                {
-                    Name = "B",
-                    Attack = new Strategy
-                    {
-                        Steps = new List<string> { "Step 1 Attack B" },
-                        Operators = new List<OperatorRecommendation>
-                        {
-                            new OperatorRecommendation { Name = "Thermite", Role = "Attacker", Reason = "Open reinforced wall", Image = "thermite.jpg" }
-                        },
-                        Placements = new List<Placement>
-                        {
-                            new Placement { Description = "Breach wall", Image = "fortress_b_attack.jpg" }
-                        }
-                    },
-                    Defense = new Strategy
-                    {
-                        Steps = new List<string> { "Step 1 Defend B" },
-                        Operators = new List<OperatorRecommendation>
-                        {
-                            new OperatorRecommendation { Name = "Jäger", Role = "Defender", Reason = "Stop grenades", Image = "jager.jpg" }
-                        },
-                        Placements = new List<Placement>
-                        {
-                            new Placement { Description = "Place ADS", Image = "fortress_b_defense.jpg" }
-                        }
-                    }
-                }
+                Steps = new List<string> { $"Step 1 Attack {site}", $"Step 2 Attack {site}" },
+                Operators = operators.OrderBy(x => rnd.Next()).Take(2)
+                    .Select(op => new OperatorRecommendation { Name = op, Role = "Attacker", Image = $"{op.ToLower()}.png", Reason = "Random reason" }).ToList(),
+                Placements = new List<Placement> { new Placement { Description = $"Attack placement for {site}", Image = $"{mapName.ToLower()}_{site.ToLower()}_attack.jpg" } },
+                OperatorBanOrder = operators.OrderBy(x => rnd.Next()).Take(1)
+                    .Select(op => new OperatorRecommendation { Name = op, Image = $"{op.ToLower()}.png" }).ToList(),
+                DefaultCams = new List<string> { "cam1.jpg", "cam2.jpg" },
+                SpawnPeeks = new List<string> { "spawn1.jpg" },
+                RushOuts = new List<string> { "rush1.jpg" }
+            },
+            Defense = new Strategy
+            {
+                Steps = new List<string> { $"Step 1 Defend {site}", $"Step 2 Defend {site}" },
+                Operators = operators.OrderBy(x => rnd.Next()).Take(2)
+                    .Select(op => new OperatorRecommendation { Name = op, Role = "Defender", Image = $"{op.ToLower()}.png", Tip = $"Tip for {op}", TipImage = $"{op.ToLower()}_tip1.jpg", Reason = "Random reason" }).ToList(),
+                Placements = new List<Placement> { new Placement { Description = $"Defense placement for {site}", Image = $"{mapName.ToLower()}_{site.ToLower()}_defense.jpg" } },
+                NiceToHaveOperators = operators.OrderBy(x => rnd.Next()).Take(1)
+                    .Select(op => new OperatorRecommendation { Name = op, Image = $"{op.ToLower()}.png" }).ToList(),
+                NeedToHaveOperators = operators.OrderBy(x => rnd.Next()).Take(1)
+                    .Select(op => new OperatorRecommendation { Name = op, Image = $"{op.ToLower()}.png" }).ToList(),
+                FunToHaveOperators = operators.OrderBy(x => rnd.Next()).Take(1)
+                    .Select(op => new OperatorRecommendation { Name = op, Image = $"{op.ToLower()}.png" }).ToList(),
+                DefaultCams = new List<string> { "cam1.jpg", "cam2.jpg" }
             }
-        };
+        }).ToList();
+
+        return new Map { Name = mapName, Image = $"{mapName.ToLower().Replace(" ", "_")}.jpg", BombSites = sites };
     }
 }

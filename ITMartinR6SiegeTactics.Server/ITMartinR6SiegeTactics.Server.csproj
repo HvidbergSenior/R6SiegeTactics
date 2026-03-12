@@ -14,4 +14,11 @@
         <ProjectReference Include="..\ITMartinR6SiegeTactics.InfraStructure\ITMartinR6SiegeTactics.InfraStructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\Images\Cameras\" />
+      <Folder Include="wwwroot\Images\OperatorTips\" />
+      <Folder Include="wwwroot\Images\RushOuts\" />
+      <Folder Include="wwwroot\Images\SpawnPeaks\" />
+    </ItemGroup>
+
 </Project>
