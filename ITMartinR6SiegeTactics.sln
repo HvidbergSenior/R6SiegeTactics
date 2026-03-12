@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITMartinR6SiegeTactics.Server", "ITMartinR6SiegeTactics.Server\ITMartinR6SiegeTactics.Server.csproj", "{B65518CD-2C8D-4F02-9C1F-75224640C8C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITMartinR6SiegeTactics.InfraStructure", "ITMartinR6SiegeTactics.InfraStructure\ITMartinR6SiegeTactics.InfraStructure.csproj", "{E77ED308-9CE1-4A4E-BFEB-201B584DD386}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITMartinR6SiegeTactics.Application", "ITMartinR6SiegeTactics.Application\ITMartinR6SiegeTactics.Application.csproj", "{8249AA4D-105F-4848-94BF-CC149EFB6C05}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITMartinR6SiegeTactics.Domain", "ITMartinR6SiegeTactics.Domain\ITMartinR6SiegeTactics.Domain.csproj", "{589E0161-4837-4AB9-99B9-05972B219EBC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B65518CD-2C8D-4F02-9C1F-75224640C8C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B65518CD-2C8D-4F02-9C1F-75224640C8C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B65518CD-2C8D-4F02-9C1F-75224640C8C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B65518CD-2C8D-4F02-9C1F-75224640C8C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E77ED308-9CE1-4A4E-BFEB-201B584DD386}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E77ED308-9CE1-4A4E-BFEB-201B584DD386}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E77ED308-9CE1-4A4E-BFEB-201B584DD386}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E77ED308-9CE1-4A4E-BFEB-201B584DD386}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8249AA4D-105F-4848-94BF-CC149EFB6C05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8249AA4D-105F-4848-94BF-CC149EFB6C05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8249AA4D-105F-4848-94BF-CC149EFB6C05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8249AA4D-105F-4848-94BF-CC149EFB6C05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{589E0161-4837-4AB9-99B9-05972B219EBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{589E0161-4837-4AB9-99B9-05972B219EBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{589E0161-4837-4AB9-99B9-05972B219EBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{589E0161-4837-4AB9-99B9-05972B219EBC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

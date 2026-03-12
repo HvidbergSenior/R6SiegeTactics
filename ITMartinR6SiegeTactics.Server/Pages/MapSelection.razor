@@ -1,0 +1,26 @@
+﻿@page "/"
+@inject NavigationManager NavManager
+
+<h3>Select a Map</h3>
+
+<div class="mb-3">
+    <select class="form-select w-50" @bind="selectedMap">
+        <option value="">-- Select a map --</option>
+        <option value="Clubhouse">Clubhouse</option>
+        <option value="Fortress">Fortress</option>
+    </select>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(selectedMap))
+{
+    <button class="btn btn-primary" @onclick="GoToMap">Go</button>
+}
+
+@code {
+    private string selectedMap = "";
+
+    void GoToMap()
+    {
+        NavManager.NavigateTo($"/map/{selectedMap}");
+    }
+}

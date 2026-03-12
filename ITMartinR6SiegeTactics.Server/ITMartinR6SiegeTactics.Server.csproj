@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+        <RootNamespace>ITMartinR6SiegeTactics</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ITMartinR6SiegeTactics.Application\ITMartinR6SiegeTactics.Application.csproj" />
+        <ProjectReference Include="..\ITMartinR6SiegeTactics.Domain\ITMartinR6SiegeTactics.Domain.csproj" />
+        <ProjectReference Include="..\ITMartinR6SiegeTactics.InfraStructure\ITMartinR6SiegeTactics.InfraStructure.csproj" />
+    </ItemGroup>
+
+</Project>

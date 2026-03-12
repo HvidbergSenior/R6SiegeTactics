@@ -1,0 +1,113 @@
+﻿@page "/map/{MapName}"
+@inject TacticService TacticService
+
+<h2>@(currentMap?.Name ?? "Loading map...")</h2>
+
+@if (currentMap != null)
+{
+    <div class="mb-3">
+        <img src="images/maps/@currentMap.Image" alt="@currentMap.Name" style="max-width:100%; height:auto; border:1px solid #ccc;" />
+    </div>
+
+    @foreach (var site in currentMap.BombSites)
+    {
+        <div class="row mb-3">
+            <!-- Attack Card -->
+            <div class="col-md-6">
+                <div class="card bg-light p-3 mb-2">
+                    <h4>Bomb Site @site.Name - Attack</h4>
+
+                    <div><b>Steps:</b>
+                        <ul>
+                            @foreach (var step in site.Attack.Steps)
+                            {
+                                <li>@step</li>
+                            }
+                        </ul>
+                    </div>
+
+                    <div><b>Operators:</b>
+                        @foreach (var op in site.Attack.Operators)
+                        {
+                            <div class="d-flex align-items-center mb-2">
+                                <img src="images/operators/@op.Image" style="width:50px;height:50px;margin-right:8px;" />
+                                <span>@op.Name (@op.Role) - @op.Reason</span>
+                            </div>
+                        }
+                    </div>
+
+                    <div><b>Placements:</b>
+                        @foreach (var p in site.Attack.Placements)
+                        {
+                            <div class="mb-2">
+                                <p>@p.Description</p>
+                                <img src="images/placements/@p.Image" style="max-width:200px;" />
+                            </div>
+                        }
+                    </div>
+
+                    <button class="btn btn-success mt-2" @onclick="() => SelectAttackPlan(site)">Select Attack Plan</button>
+                </div>
+            </div>
+
+            <!-- Defense Card -->
+            <div class="col-md-6">
+                <div class="card bg-light p-3 mb-2">
+                    <h4>Bomb Site @site.Name - Defense</h4>
+
+                    <div><b>Steps:</b>
+                        <ul>
+                            @foreach (var step in site.Defense.Steps)
+                            {
+                                <li>@step</li>
+                            }
+                        </ul>
+                    </div>
+
+                    <div><b>Operators:</b>
+                        @foreach (var op in site.Defense.Operators)
+                        {
+                            <div class="d-flex align-items-center mb-2">
+                                <img src="images/operators/@op.Image" style="width:50px;height:50px;margin-right:8px;" />
+                                <span>@op.Name (@op.Role) - @op.Reason</span>
+                            </div>
+                        }
+                    </div>
+
+                    <div><b>Placements:</b>
+                        @foreach (var p in site.Defense.Placements)
+                        {
+                            <div class="mb-2">
+                                <p>@p.Description</p>
+                                <img src="images/placements/@p.Image" style="max-width:200px;" />
+                            </div>
+                        }
+                    </div>
+
+                    <button class="btn btn-success mt-2" @onclick="() => SelectDefensePlan(site)">Select Defense Plan</button>
+                </div>
+            </div>
+        </div>
+        <hr />
+    }
+}
+
+@code {
+    [Parameter] public string MapName { get; set; }
+    private Map currentMap;
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentMap = await TacticService.GetMap(MapName);
+    }
+
+    void SelectAttackPlan(BombSite site)
+    {
+        Console.WriteLine($"Selected attack plan for {site.Name}");
+    }
+
+    void SelectDefensePlan(BombSite site)
+    {
+        Console.WriteLine($"Selected defense plan for {site.Name}");
+    }
+}
