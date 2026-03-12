@@ -100,6 +100,7 @@ public class TacticService
                         }
                     }
                 },
+                
                 new BombSite
                 {
                     Name = "B",
